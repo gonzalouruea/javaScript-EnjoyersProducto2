@@ -4,6 +4,7 @@
 
 // importamos el array "cards" del fichero datos.js
 import { cards } from './datos.js'
+import { mostrarUsuarioActivo } from './mostrarUsuarioActivo.js'
 
 // declaramos una constante con la clase #rowContainer
 const rowContainer = document.querySelector("#rowContainer")
@@ -43,3 +44,4 @@ for (let i = 0; i < cards.length; i++) {
         rowContainer.innerHTML += card
     }
 }
+mostrarUsuarioActivo();

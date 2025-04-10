@@ -1,61 +1,72 @@
-/**
-* lógica del fichero registro.html 
-*/
 
-// importamos el array "users" del fichero datos.js
-import { users } from "./datos.js"
 
-// declaramos constantes para obtener el ID de diferentes elementos del DOM
-const table = document.getElementById("userTableId")
-const submitButton = document.getElementById("submitId")
+import { obtenerTodosLosUsuariosFinal, eliminarUsuarioPorEmailFinal, agregarUsuarioFinal } from "./int_4_usuarios.js";
+import { mostrarUsuarioActivo } from "./mostrarUsuarioActivo.js";
 
-// función para añadir una nueva fila, se pasará como parámetros nombre, email, contraseña y el index del array
+// Declaramos constantes para obtener el ID de diferentes elementos del DOM
+const table = document.getElementById("userTableId");
+const submitButton = document.getElementById("submitId");
+
+// Función para añadir una nueva fila a la tabla, se pasará como parámetros nombre, email, contraseña
 function addRow(name, email, password, index) {
-    let newRow = table.insertRow()
+  let newRow = table.insertRow();
 
-    let cell1 = newRow.insertCell(0)
-    let cell2 = newRow.insertCell(1)
-    let cell3 = newRow.insertCell(2)
-    let cell4 = newRow.insertCell(3)
+  let cell1 = newRow.insertCell(0);
+  let cell2 = newRow.insertCell(1);
+  let cell3 = newRow.insertCell(2);
+  let cell4 = newRow.insertCell(3);
 
-    cell1.textContent = name
-    cell2.textContent = email
-    cell3.textContent = password
-    cell4.innerHTML = `<button type="button" class="btn btn-danger delete-button">Eliminar</button>`
+  cell1.textContent = name;
+  cell2.textContent = email;
+  cell3.textContent = password;
+  cell4.innerHTML = `<button type="button" class="btn btn-danger delete-button">Eliminar</button>`;
 
-    let deleteButton = newRow.querySelector(".delete-button")
-    deleteButton.addEventListener("click", function () {
-        users.splice(index, 1)
-        newRow.remove();
-    })
+  let deleteButton = newRow.querySelector(".delete-button");
+  deleteButton.addEventListener("click", function () {
+    eliminarUsuarioPorEmailFinal(email); // Eliminamos el usuario de la base de datos
+    newRow.remove();
+  });
 }
 
-// bucle para iterar el array "users" y ejecutar la función "addRow" por cada iteración
-for (let index = 0; index < users.length; index++) {
-    let user = users[index]
-    addRow(user.name, user.email, user.password, index)
+// Función para cargar los usuarios desde la base de datos y mostrar las filas
+async function loadUsersFromDB() {
+  try {
+    const users = await obtenerTodosLosUsuariosFinal(); // Obtener todos los usuarios desde la base de datos
+    users.forEach((user, index) => {
+      addRow(user.name, user.email, user.password, index);
+    });
+  } catch (err) {
+    console.error("Error al cargar los usuarios desde la base de datos:", err);
+  }
 }
 
-// función para añadir un nuevo usuario con los datos obtenidos del DOM
-function addNewUser(event) {
-    event.preventDefault() //función para evitar que el DOM recargue la página al realizar la acción
+// Función para añadir un nuevo usuario a la base de datos
+async function addNewUser(event) {
+  event.preventDefault(); // Evitar que el DOM recargue la página al realizar la acción
 
-    let userName = document.getElementById("userNameId").value
-    let userEmail = document.getElementById("userEmailId").value
-    let userPassword = document.getElementById("userPasswordId").value
-    let userAdd = false
+  let userName = document.getElementById("userNameId").value;
+  let userEmail = document.getElementById("userEmailId").value;
+  let userPassword = document.getElementById("userPasswordId").value;
 
-    if (userName && userEmail && userPassword) {
-        users.push({ name: userName, email: userEmail, password: userPassword })
-
-        addRow(userName, userEmail, userPassword, users.length - 1)
-        alert("Nuevo usuario registrado correctamente")
-        userAdd = true
+  if (userName && userEmail && userPassword) {
+    try {
+      // Añadir el nuevo usuario a la base de datos IndexedDB
+      await agregarUsuarioFinal({"name": userName, "email": userEmail, "password": userPassword});
+      alert("Nuevo usuario registrado correctamente");
+      addRow(userName, userEmail, userPassword); // Añadirlo a la tabla visual
+    } catch (error) {
+      alert("Error al registrar el usuario: " + error.message);
     }
-    if (!userAdd) {
-        alert("Faltan datos para añadir registro")
-    }
+  } else {
+    alert("Faltan datos para añadir registro");
+  }
 }
 
-// listener para añadir acción al realizar "click" en el botón del DOM
-submitButton.addEventListener("click", addNewUser)
+// Listener para añadir acción al realizar "click" en el botón del DOM
+submitButton.addEventListener("click", addNewUser);
+
+// Cargar los usuarios al cargar la página
+loadUsersFromDB();
+
+// Mostrar el usuario activo
+mostrarUsuarioActivo();
