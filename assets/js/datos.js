@@ -15,50 +15,57 @@ const cards = [
         title: "Corto césped",
         description: "Persona con experiencia se ofrece para cortar césped por los alrededores del Vallés Oriental",
         autor: users[0].name,
-        volunType: "Oferta",
-        email: users[0].email
+        volunType: "Oferta"
     },
     {
         date: "10/03/2025",
         title: "Ayudo en limpieza de hogar",
         description: "Persona se ofrece para limpieza de hogar a personas mayores, seriedad.",
         autor: users[1].name,
-        volunType: "Oferta",
-        email: users[1].email
+        volunType: "Oferta"
     },
     {
         date: "11/03/2025",
         title: "Acompañamiento en estudios",
         description: "Se requiere persona con conocimiento en matemáticas para apoyo a estudiante de 12 años",
         autor: users[2].name,
-        volunType: "Petición",
-        email: users[2].email
+        volunType: "Petición"
     },
     {
         date: "10/03/2025",
         title: "Cuidado persona mayor",
         description: "Se necesita persona para cuidado de persona mayor el próximo lunes por la mañana.",
         autor: users[3].name,
-        volunType: "Petición",
-        email: users[3].email
+        volunType: "Petición"
     },
     {
         date: "14/03/2025",
         title: "Informática y tercera edad",
         description: "Ayudo a personas mayores en la iniciación con la informática (manejo de ordenador, ofimática, etc.), los jueves por la tarde",
         autor: users[2].name,
-        volunType: "Oferta",
-        email: users[2].email
+        volunType: "Oferta"
     },
     {
         date: "13/03/2025",
         title: "Reformas",
         description: "Se busca gente para ayuda en reformas. Necesitamos tumbar 4 muros.",
         autor: users[2].name,
-        volunType: "Petición",
-        email: users[2].email
+        volunType: "Petición"
     }
 ]
 
 // exportamos los 2 arrays
 export { users, cards }
+
+
+/* Documentacion prompts
+ 
+Todos los prompts se realizaron con la herramienta de IA Copilot
+
+-¿Se puede añadir más de un archivo .js a una página .html?
+-¿Al añadir varias páginas en el .html deben colocarse en un orden determinado?
+-¿Es indiferente poner el script en el head o antes de cerrar el body?
+-¿Puedo tener archivos separados en varias carpetas?
+
+
+*/

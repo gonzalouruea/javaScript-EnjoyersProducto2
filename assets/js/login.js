@@ -1,40 +1,46 @@
-/**
-* lógica del fichero login.html
-*/
+import { loguearUsuario, mostrarUsuarioActivo } from './almacenaje.js'; // Importamos funciones de almacenaje.js
 
-// importamos la función "loginUser" del fichero almacenaje.js
-import { loginUser } from "./almacenaje.js";
+// Referencias a los elementos del DOM
+const botonEnviar = document.getElementById('submitValues');
+const inputCorreo = document.getElementById('loginInputEmail');
+const inputContrasena = document.getElementById('loginInputPassword');
+const usuarioEnMenu = document.getElementById('userLogged');
+const mensajeUsuarioActivo = document.getElementById('userIsLogged');
 
-// declaramos constantes para obtener el ID de diferentes elementos del DOM
-const domSubmitValues = document.getElementById('submitValues')
-const domUserLogged = document.getElementById('activeUser')
-const domUserIsLogged = document.getElementById('userIsLogged')
-const domUserForm = document.getElementById('userForm')
 
-domSubmitValues.addEventListener("click", loginUser)
 
-// asignamos a una variable "user" el item del WebStorage, con un condicional verificamos si tiene algún contenido (true), de ser así asignamos al "domUserLogged" el user (es el email)
-function userLogged() {
-    let user = localStorage.getItem("activeUser")
+// Función para manejar el inicio de sesión
+function manejarInicioSesion(evento) {
+    evento.preventDefault(); // Previene la recarga del formulario
 
-    if (user) {
-        domUserLogged.textContent = user
-        domUserIsLogged.textContent = `¡Bienvenid@ ${user}!`
-        domUserForm.innerHTML = `
-        <div>
-            <h4>Usuario ${user} autenticado correctamente</h4><br>
-            <button class="btn btn-primary" id="buttonDisconnect">Desconectar</button>
-        </div>`
+    const correo = inputCorreo.value;
+    const contrasena = inputContrasena.value;
 
-        let buttonDisconnect = document.getElementById("buttonDisconnect")
-
-        buttonDisconnect.addEventListener("click", function () {
-            localStorage.removeItem("activeUser")
-            location.reload()
-        })
+    if (loguearUsuario(correo, contrasena)) { // Llama a la función loguearUsuario de almacenaje.js
+        alert('Inicio de sesión exitoso');
+        mostrarUsuarioActivo(); // Actualiza el usuario activo en el DOM
+    } else {
+        alert('Correo o contraseña incorrectos');
     }
 }
 
-// listener para que en la siguiente actualización del DOM verifique si el usuario ha loggeado
-document.addEventListener("DOMContentLoaded", userLogged)
+// Configuración inicial
+window.addEventListener('DOMContentLoaded', () => {
+    mostrarUsuarioActivo(); // Muestra el usuario activo al cargar la página
+    botonEnviar.addEventListener('click', manejarInicioSesion); // Añade el evento al botón
+});
 
+
+
+/* Documentacion prompts
+ 
+Todos los prompts se realizaron con la herramienta de IA Copilot
+
+-¿Cual es la función para saber el número de posiciones de un array?
+-¿ Cual es este error Uncaught TypeError: Cannot read properties of null (reading 'addEventListener')?
+-¿Al recargar la página se pierden los datos puedes explicarme por qué?
+-¿Es posible trabajar el back-end en javaScript?
+  Al agregar el evento en el botón, se me actualiza la página automáticamente perdiendo los datos, ¿cómo puedo evitarlo?
+
+
+*/
