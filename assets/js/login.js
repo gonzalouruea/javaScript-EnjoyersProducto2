@@ -1,5 +1,5 @@
 import { obtenerUsuarioActivo, loguearUsuario, obtenerTodosLosUsuarios } from './almacenaje.js';
-import { mostrarUsuarioActivo } from './mostrarUsuarioActivo.js';
+import { mostrarUsuarioActivo, mostrarUsuarioActivoLogin } from './mostrarUsuarioActivo.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (user.email === emailValue && user.password === passwordValue) {
           alert("Se ha iniciado sesión correctamente");
           loguearUsuario(emailValue);
-          mostrarUsuarioActivo();
+          mostrarUsuarioActivoLogin();
           domUserIsLogged.textContent = `¡Bienvenid@ ${user.name}!`;
           userExists = true;
           break;

@@ -244,3 +244,45 @@ export async function getDBCards() {
   }
   return dbCards;
 }
+export function getDBSelected() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open("voluntariadoDB", 1)
+
+        request.onupgradeneeded = (e) => {
+            const db = e.target.result
+            if (!db.objectStoreNames.contains("selectedCards")) {
+                db.createObjectStore("selectedCards", { keyPath: "title" })
+            }
+        }
+
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+    })
+}
+
+export async function saveSelectedCard(card) {
+    const db = await getDBSelected()
+    const tx = db.transaction("selectedCards", "readwrite")
+    const store = tx.objectStore("selectedCards")
+    store.add(card)
+    return tx.complete
+}
+
+export async function getSelectedCards() {
+    const db = await getDBSelected()
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction("selectedCards", "readonly")
+        const store = tx.objectStore("selectedCards")
+        const request = store.getAll()
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+    })
+}
+
+export async function deleteSelectedCard(title) {
+    const db = await getDBSelected()
+    const tx = db.transaction("selectedCards", "readwrite")
+    const store = tx.objectStore("selectedCards")
+    store.delete(title)
+    return tx.complete
+}

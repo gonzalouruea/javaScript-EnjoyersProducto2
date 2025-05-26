@@ -14,3 +14,15 @@ export function mostrarUsuarioActivo() {
     }
   });
 }
+export async function mostrarUsuarioActivoLogin() {
+    const domUserLogged = document.getElementById('userLogged');
+    const usuario = await obtenerUsuarioActivo();
+
+    console.log(usuario);
+
+    if (usuario && usuario.name) {
+      domUserLogged.textContent = usuario.name;
+    } else {
+      domUserLogged.textContent = "-no login-";
+    }
+}
